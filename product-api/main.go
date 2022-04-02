@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/Vergangenheit/go-grpc-ms/product-api/handlers"
+	"github.com/gorilla/mux"
 )
 
 func main() {
@@ -16,9 +17,18 @@ func main() {
 	l := log.New(os.Stdout, "product-api", log.LstdFlags)
 	ph := handlers.NewProducts(l)
 	// create servemux
-	sm := http.NewServeMux()
-	sm.Handle("/", ph)
-
+	sm := mux.NewRouter()
+	// create router for put request
+	getRouter := sm.Methods("GET").Subrouter()
+	getRouter.HandleFunc("/", ph.GetProducts)
+	// creater router for put requests
+	putRouter := sm.Methods("PUT").Subrouter()
+	putRouter.HandleFunc("/{id:[0-9]+}", ph.UpdateProducts)
+	putRouter.Use(ph.MiddlewareProductValidation)
+	// router for post requests
+	postRouter := sm.Methods("POST").Subrouter()
+	postRouter.HandleFunc("/", ph.AddProduct)
+	postRouter.Use(ph.MiddlewareProductValidation)
 	// instantiate an http server
 	s := &http.Server{
 		Addr:         ":8080",
