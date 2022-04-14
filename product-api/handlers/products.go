@@ -26,6 +26,13 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// a list of products returned in the response
+// swagger:response productsResponse
+type productsResponse struct {
+	// All products in the system
+	// in: body
+	Body []data.Product
+}
 type Products struct {
 	l *log.Logger
 }
@@ -94,4 +101,15 @@ func (p Products) MiddlewareProductValidation(next http.Handler) http.Handler {
 		req := r.WithContext(ctx)
 		next.ServeHTTP(rw, req)
 	})
+}
+
+func getProductID(r *http.Request) int {
+	// parse the product id from the url
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+
+	if err != nil {
+		panic(err)
+	}
+	return id
 }
