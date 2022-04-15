@@ -33,6 +33,18 @@ type productsResponse struct {
 	// in: body
 	Body []data.Product
 }
+
+// swagger:response noContent
+type productsNotContext struct {
+}
+
+// swagger:parameters Delete
+type productIDParameterWrapper struct {
+	// the id pf the product to delete from the database
+	// in: path
+	// required: true
+	ID int `json:"id"`
+}
 type Products struct {
 	l *log.Logger
 }
@@ -41,11 +53,16 @@ func NewProducts(l *log.Logger) *Products {
 	return &Products{l}
 }
 
+// GenericError is a generic error message returned by a server
+type GenericError struct {
+	Message string `json:"message"`
+}
+
 func (p *Products) AddProduct(rw http.ResponseWriter, r *http.Request) {
 	p.l.Println("handle POST product")
 	// create muy new prodcut object
 	prod := r.Context().Value(KeyProduct{}).(data.Product)
-	data.AddProduct(&prod)
+	data.AddProduct(prod)
 }
 
 func (p *Products) UpdateProducts(rw http.ResponseWriter, r *http.Request) {
@@ -59,7 +76,29 @@ func (p *Products) UpdateProducts(rw http.ResponseWriter, r *http.Request) {
 	p.l.Println("Handle PUT product", id)
 	prod := r.Context().Value(KeyProduct{}).(data.Product)
 
-	err2 := data.UpdateProduct(id, &prod)
+	err2 := data.UpdateProduct(prod)
+	if err2 == data.ErrProductNotFound {
+		http.Error(rw, "Product not found", http.StatusNotFound)
+		return
+	}
+	if err2 != nil {
+		http.Error(rw, "Product not found", http.StatusInternalServerError)
+		return
+	}
+}
+
+func (p *Products) DeleteProduct(rw http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		http.Error(rw, "Unable to convert id", http.StatusBadRequest)
+		return
+	}
+
+	p.l.Println("Handle DELETE product", id)
+	prod := r.Context().Value(KeyProduct{}).(data.Product)
+
+	err2 := data.DeleteProduct(prod.ID)
 	if err2 == data.ErrProductNotFound {
 		http.Error(rw, "Product not found", http.StatusNotFound)
 		return
@@ -77,7 +116,7 @@ func (p Products) MiddlewareProductValidation(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		// validate the request deserialize product
 		prod := data.Product{}
-		err := prod.FromJSON(r.Body)
+		err := data.FromJSON(prod, r.Body)
 		if err != nil {
 			http.Error(rw, "Unable to unmarshal json", http.StatusBadRequest)
 			return

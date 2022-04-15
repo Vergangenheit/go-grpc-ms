@@ -1,9 +1,7 @@
 package data
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"regexp"
 	"time"
 
@@ -23,18 +21,6 @@ type Product struct {
 
 // make the returned pointers to struct a type in itself to link methods to it
 type Products []*Product
-
-func (p *Products) ToJSON(w io.Writer) error {
-	// encoder
-	e := json.NewEncoder(w)
-	return e.Encode(p)
-}
-
-func (p *Product) FromJSON(r io.Reader) error {
-	// create and encoder
-	e := json.NewDecoder(r)
-	return e.Decode(p)
-}
 
 // add a validate method on ur type
 func (p *Product) Validate() error {
@@ -59,38 +45,57 @@ func GetProducts() Products {
 	return productList
 }
 
-// store into database
-func AddProduct(p *Product) {
-	// set product id
-	p.ID = getNextID()
-	productList = append(productList, p)
+func GetProductByID(id int) (*Product, error) {
+	i := findIndexByProductID(id)
+	if id == -1 {
+		return nil, ErrProductNotFound
+	}
+
+	return productList[i], nil
 }
 
-func UpdateProduct(id int, p *Product) error {
-	_, pos, err := findProduct(id)
-	if err != nil {
-		return err
+// store into database
+func AddProduct(p Product) {
+	// set product id
+	maxID := productList[len(productList)-1].ID
+	p.ID = maxID + 1
+	productList = append(productList, &p)
+}
+
+func UpdateProduct(p Product) error {
+	i := findIndexByProductID(p.ID)
+	if i == -1 {
+		return ErrProductNotFound
 	}
 	// update product list
-	p.ID = id
-	productList[pos] = p
+	productList[i] = &p
 
 	return nil
 }
 
-func DeleteProduct(id int, p *Product) error {
-	return
+func DeleteProduct(id int) error {
+	i := findIndexByProductID(id)
+	if i == 1 {
+		return ErrProductNotFound
+	}
+
+	productList = append(productList[:i], productList[i+1])
+
+	return nil
+
 }
 
 var ErrProductNotFound = fmt.Errorf("product not found")
 
-func findProduct(id int) (*Product, int, error) {
+// findIndex finds the index of a product in the database
+// returns -1 when no product can be found
+func findIndexByProductID(id int) int {
 	for i, p := range productList {
 		if p.ID == id {
-			return p, i, nil
+			return i
 		}
 	}
-	return nil, -1, ErrProductNotFound
+	return -1
 }
 
 func getNextID() int {

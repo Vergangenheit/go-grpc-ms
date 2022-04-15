@@ -37,9 +37,20 @@ paths:
           $ref: '#/responses/productsResponse'
       tags:
       - products
+  /products/{id}:
+    delete:
+      description: Returns a list of products
+      operationId: deleteProduct
+      responses:
+        "201":
+          $ref: '#/responses/noContent'
+      tags:
+      - products
 produces:
 - application/json
 responses:
+  noContent:
+    description: ""
   productsResponse:
     description: a list of products returned in the response
     schema:

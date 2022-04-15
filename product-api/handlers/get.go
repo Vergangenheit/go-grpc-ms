@@ -11,11 +11,11 @@ import (
 // responses:
 //  200: productsResponse
 
-// GetProducts returns the products from the data store
-func (p *Products) GetProducts(rw http.ResponseWriter, r *http.Request) {
+// ListAll handles GET request and returns all current products
+func (p *Products) ListAll(rw http.ResponseWriter, r *http.Request) {
 	p.l.Println("Handle GET Products")
-	lp := data.GetProducts()
-	err := lp.ToJSON(rw)
+	prods := data.GetProducts()
+	err := data.ToJSON(prods, rw)
 	if err != nil {
 		http.Error(rw, "Unable to marshal json", http.StatusInternalServerError)
 	}
