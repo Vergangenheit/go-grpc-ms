@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/Vergangenheit/go-grpc-ms/product-api/data"
 	"github.com/Vergangenheit/go-grpc-ms/product-api/handlers"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/gorilla/mux"
@@ -16,23 +17,25 @@ import (
 func main() {
 	// reference to the handler
 	l := log.New(os.Stdout, "product-api", log.LstdFlags)
-	ph := handlers.NewProducts(l)
+	v := data.NewValidation()
+	ph := handlers.NewProducts(l, v)
 	// create servemux
 	sm := mux.NewRouter()
 	// create router for put request
 	getRouter := sm.Methods("GET").Subrouter()
-	getRouter.HandleFunc("/", ph.ListAll)
+	getRouter.HandleFunc("/products", ph.ListAll)
+	getRouter.HandleFunc("/products/{id:[0-9]+}", ph.ListSingle)
 	// creater router for put requests
 	putRouter := sm.Methods("PUT").Subrouter()
-	putRouter.HandleFunc("/{id:[0-9]+}", ph.UpdateProducts)
-	putRouter.Use(ph.MiddlewareProductValidation)
+	putRouter.HandleFunc("/products", ph.Update)
+	putRouter.Use(ph.MiddlewareValidateProduct)
 	// router for post requests
 	postRouter := sm.Methods("POST").Subrouter()
-	postRouter.HandleFunc("/", ph.AddProduct)
-	postRouter.Use(ph.MiddlewareProductValidation)
+	postRouter.HandleFunc("/products", ph.Create)
+	postRouter.Use(ph.MiddlewareValidateProduct)
 
 	deleteRouter := sm.Methods(http.MethodDelete).Subrouter()
-	deleteRouter.HandleFunc("/{id:[0-9]+}", ph.DeleteProduct)
+	deleteRouter.HandleFunc("/products/{id:[0-9]+}", ph.Delete)
 
 	// specify options
 	ops := middleware.RedocOpts{SpecURL: "/swagger.yaml"}

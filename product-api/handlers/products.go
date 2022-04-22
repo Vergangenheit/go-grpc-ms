@@ -16,7 +16,6 @@
 package handlers
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -26,129 +25,47 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// a list of products returned in the response
-// swagger:response productsResponse
-type productsResponse struct {
-	// All products in the system
-	// in: body
-	Body []data.Product
-}
+// KeyProduct is a key used for the Product object in the context
+type KeyProduct struct{}
 
-// swagger:response noContent
-type productsNotContext struct {
-}
-
-// swagger:parameters Delete
-type productIDParameterWrapper struct {
-	// the id pf the product to delete from the database
-	// in: path
-	// required: true
-	ID int `json:"id"`
-}
+// Products handler for getting and updating products
 type Products struct {
 	l *log.Logger
+	v *data.Validation
 }
 
-func NewProducts(l *log.Logger) *Products {
-	return &Products{l}
+// NewProducts returns a new products handler with the given logger
+func NewProducts(l *log.Logger, v *data.Validation) *Products {
+	return &Products{l, v}
 }
+
+// ErrInvalidProductPath is an error message when the product path is not valid
+var ErrInvalidProductPath = fmt.Errorf("Invalid Path, path should be /products/[id]")
 
 // GenericError is a generic error message returned by a server
 type GenericError struct {
 	Message string `json:"message"`
 }
 
-func (p *Products) AddProduct(rw http.ResponseWriter, r *http.Request) {
-	p.l.Println("handle POST product")
-	// create muy new prodcut object
-	prod := r.Context().Value(KeyProduct{}).(data.Product)
-	data.AddProduct(prod)
+// ValidationError is a collection of validation error messages
+type ValidationError struct {
+	Messages []string `json:"messages"`
 }
 
-func (p *Products) UpdateProducts(rw http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
-	if err != nil {
-		http.Error(rw, "Unable to convert id", http.StatusBadRequest)
-		return
-	}
-
-	p.l.Println("Handle PUT product", id)
-	prod := r.Context().Value(KeyProduct{}).(data.Product)
-
-	err2 := data.UpdateProduct(prod)
-	if err2 == data.ErrProductNotFound {
-		http.Error(rw, "Product not found", http.StatusNotFound)
-		return
-	}
-	if err2 != nil {
-		http.Error(rw, "Product not found", http.StatusInternalServerError)
-		return
-	}
-}
-
-func (p *Products) DeleteProduct(rw http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
-	if err != nil {
-		http.Error(rw, "Unable to convert id", http.StatusBadRequest)
-		return
-	}
-
-	p.l.Println("Handle DELETE product", id)
-	prod := r.Context().Value(KeyProduct{}).(data.Product)
-
-	err2 := data.DeleteProduct(prod.ID)
-	if err2 == data.ErrProductNotFound {
-		http.Error(rw, "Product not found", http.StatusNotFound)
-		return
-	}
-	if err2 != nil {
-		http.Error(rw, "Product not found", http.StatusInternalServerError)
-		return
-	}
-}
-
-// define a key for the context
-type KeyProduct struct{}
-
-func (p Products) MiddlewareProductValidation(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-		// validate the request deserialize product
-		prod := data.Product{}
-		err := data.FromJSON(prod, r.Body)
-		if err != nil {
-			http.Error(rw, "Unable to unmarshal json", http.StatusBadRequest)
-			return
-		}
-
-		// validate the product
-		valid_err := prod.Validate()
-		if valid_err != nil {
-			p.l.Println("[ERROR] validating product", valid_err)
-			http.Error(
-				rw,
-				fmt.Sprintf("Error validating product: %s", valid_err),
-				http.StatusBadRequest,
-			)
-			return
-		}
-
-		// put the product in the request context
-		ctx := context.WithValue(r.Context(), KeyProduct{}, prod)
-		// create a copy of that request
-		req := r.WithContext(ctx)
-		next.ServeHTTP(rw, req)
-	})
-}
-
+// getProductID returns the product ID from the URL
+// Panics if cannot convert the id into an integer
+// this should never happen as the router ensures that
+// this is a valid number
 func getProductID(r *http.Request) int {
 	// parse the product id from the url
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
 
+	// convert the id into an integer and return
+	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
+		// should never happen
 		panic(err)
 	}
+
 	return id
 }

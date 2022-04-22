@@ -3,12 +3,15 @@ consumes:
 - application/json
 definitions:
   Product:
+    description: Product defines the structure for an API product
     properties:
       description:
         type: string
         x-go-name: Description
       id:
+        description: the id for this product
         format: int64
+        minimum: 1
         type: integer
         x-go-name: ID
       name:
@@ -21,6 +24,8 @@ definitions:
       sku:
         type: string
         x-go-name: SKU
+    required:
+    - id
     type: object
     x-go-package: github.com/Vergangenheit/go-grpc-ms/product-api/data
 info:

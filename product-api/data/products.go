@@ -2,13 +2,16 @@ package data
 
 import (
 	"fmt"
-	"regexp"
 	"time"
-
-	"github.com/go-playground/validator/v10"
 )
 
+// Product defines the structure for an API product
+// swagger:model
 type Product struct {
+	// the id for this product
+	//
+	// required: true
+	// min: 1
 	ID          int     `json:"id"`
 	Name        string  `json:"name" validate:"required"`
 	Description string  `json:"description"`
@@ -23,22 +26,22 @@ type Product struct {
 type Products []*Product
 
 // add a validate method on ur type
-func (p *Product) Validate() error {
-	validate := validator.New()
-	validate.RegisterValidation("sku", validateSKU)
-	return validate.Struct(p)
-}
+// func (p *Product) Validate() error {
+// 	validate := validator.New()
+// 	validate.RegisterValidation("sku", validateSKU)
+// 	return validate.Struct(p)
+// }
 
 // custom validation function for sku field
-func validateSKU(fl validator.FieldLevel) bool {
-	// use a regex
-	re := regexp.MustCompile(`[a-z]+-[a-z]+-[a-z]+`)
-	matches := re.FindAllString(fl.Field().String(), -1)
-	if len(matches) != 1 {
-		return false
-	}
-	return true
-}
+// func validateSKU(fl validator.FieldLevel) bool {
+// 	// use a regex
+// 	re := regexp.MustCompile(`[a-z]+-[a-z]+-[a-z]+`)
+// 	matches := re.FindAllString(fl.Field().String(), -1)
+// 	if len(matches) != 1 {
+// 		return false
+// 	}
+// 	return true
+// }
 
 // data access model
 func GetProducts() Products {
