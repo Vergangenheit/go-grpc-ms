@@ -11,6 +11,7 @@ import (
 	"github.com/Vergangenheit/go-grpc-ms/product-api/data"
 	"github.com/Vergangenheit/go-grpc-ms/product-api/handlers"
 	"github.com/go-openapi/runtime/middleware"
+	gohandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -42,15 +43,21 @@ func main() {
 	sh := middleware.Redoc(ops, nil)
 	getRouter.Handle("/docs", sh)
 	getRouter.Handle("/swagger.yaml", http.FileServer(http.Dir("./")))
+
+	// CORS
+	ch := gohandlers.CORS(gohandlers.AllowedOrigins([]string{"http://localhost:3000"}))
+
 	// instantiate an http server
 	s := &http.Server{
 		Addr:         ":8080",
-		Handler:      sm,
+		Handler:      ch(sm),
 		IdleTimeout:  120 * time.Second,
 		ReadTimeout:  1 * time.Second,
 		WriteTimeout: 1 * time.Second,
 	}
 	go func() {
+		l.Println("Starting server on port 8080")
+
 		err := s.ListenAndServe()
 		if err != nil {
 			l.Fatal(err)
