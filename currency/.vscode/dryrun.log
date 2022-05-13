@@ -1,0 +1,4 @@
+make: Entering directory 'c:/Users/lorenzo/go/src/github.com/Vergangenheit/go-grpc-ms/currency'
+protoc -I protos/ protos/currency.proto --go_out=plugins=grpc:protos/currency
+make: Leaving directory 'c:/Users/lorenzo/go/src/github.com/Vergangenheit/go-grpc-ms/currency'
+ 
