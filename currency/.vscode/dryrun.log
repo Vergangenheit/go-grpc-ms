@@ -1,4 +1,5 @@
+make.exe --dry-run --always-make --keep-going --print-directory
 make: Entering directory 'c:/Users/lorenzo/go/src/github.com/Vergangenheit/go-grpc-ms/currency'
-protoc -I protos/ protos/currency.proto --go_out=plugins=grpc:protos/currency
+protoc --go-grpc_out=. protos/currency.proto
 make: Leaving directory 'c:/Users/lorenzo/go/src/github.com/Vergangenheit/go-grpc-ms/currency'
  
