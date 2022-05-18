@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon May 16 09:15:26 2022
+# Make data base, printed on Wed May 18 08:17:48 2022
 
 # Variables
 
@@ -21,7 +21,7 @@ USERPROFILE = C:\Users\lorenzo
 # environment
 LOCALAPPDATA = C:\Users\lorenzo\AppData\Local
 # environment
-VSCODE_IPC_HOOK_EXTHOST = \\.\pipe\vscode-ipc-c64fe514-594f-40ee-8cce-d9dfd6c7a4c0-sock
+VSCODE_IPC_HOOK_EXTHOST = \\.\pipe\vscode-ipc-459a0c6f-bd5c-4052-91b6-4af29dbec2fd-sock
 # environment
 VSCODE_CWD = C:\Users\lorenzo\AppData\Local\Programs\Microsoft VS Code
 # environment
@@ -41,7 +41,7 @@ GOPATH = C:\Users\lorenzo\go
 # automatic
 @D = $(patsubst %/,%,$(patsubst %\,%,$(dir $@)))
 # environment
-CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_14212_RAMGEKYMXYVMRVFH
+CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_14428_ZYCLNAKSEDWNEVHT
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # default
@@ -97,7 +97,7 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 14212
+VSCODE_PID = 14428
 # environment
 CUDA_PATH = C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.2
 # automatic
@@ -153,6 +153,8 @@ VSCODE_LOG_NATIVE = false
 # environment
 USERNAME = lorenzo
 # environment
+GOPRIVATE = go.vxfiber.dev,bitbucket.org/vxfiber,dev.vx.se
+# environment
 COMMONPROGRAMFILES = C:\Program Files (x86)\Common Files
 # automatic
 ?F = $(notdir $?)
@@ -193,20 +195,15 @@ PROCESSOR_ARCHITECTURE = x86
 # environment
 PYCHARM COMMUNITY EDITION = C:\Program Files\JetBrains\PyCharm Community Edition 2021.3.2\bin;
 # environment
-GOMODCACHE = C:\Users\lorenzo\go\pkg\mod
-# environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
-COMMONPROGRAMFILES(X86) = C:\Program Files (x86)\Commo 
-n Files
+COMMONPROGRAMFILES(X86) = C:\Program Files (x86)\Common Files
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
 TEMP = C:\Users\lorenzo\AppData\Local\Temp
 # environment
 VSCODE_IPC_HOOK = \\.\pipe\30d7b0d69ed938c3a5251450823ed6c1-1.67.1-main-sock
-# environment
-GOPROXY = https://proxy.golang.org,direct
 # environment
 NVCUDASAMPLES11_2_ROOT = C:\ProgramData\NVIDIA Corporation\CUDA Samples\v11.2
 # default
@@ -226,7 +223,7 @@ PROCESSOR_REVISION = 9e0a
 # environment
 PROCESSOR_IDENTIFIER = Intel64 Family 6 Model 158 Stepping 10, GenuineIntel
 # variable set hash-table stats:
-# Load=106/1024=10%, Rehash=0, Collisions=10/133=8%
+# Load=105/1024=10%, Rehash=0, Collisions=10/132=8%
 
 # Pattern-specific Variable Values
 
@@ -234,9 +231,9 @@ PROCESSOR_IDENTIFIER = Intel64 Family 6 Model 158 Stepping 10, GenuineIntel
 
 # Directories
 
-# . (key c:/Users/lorenzo/go/src/github.com/Vergangenheit/go-grpc-ms/currency, mtime 1652453553): 8 files, no impossibilities.
+# . (key c:/Users/lorenzo/go/src/github.com/Vergangenheit/go-grpc-ms/currency, mtime 1652688120): 10 files, no impossibilities.
 
-# 8 files, no impossibilities in 1 directories.
+# 10 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -247,7 +244,7 @@ PROCESSOR_IDENTIFIER = Intel64 Family 6 Model 158 Stepping 10, GenuineIntel
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-13 16:51:57
+#  Last modified 2022-05-16 11:05:11
 #  File has been updated.
 #  Successfully updated.
 
@@ -257,7 +254,7 @@ protos:
 #  File does not exist.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 4):
-	 protoc --go-grpc_out=. protos/currency.proto
+	 protoc --go_out=. --go-grpc_opt=require_unimplemented_servers=false --go-grpc_out=. protos/currency.proto
 
 # Not a target:
 .DEFAULT:
@@ -285,12 +282,12 @@ all:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 12 / storage = 82 B / avg = 6 B
-# current buf: size = 8174 B / used = 82 B / count = 12 / avg = 6 B
+# strcache buffers: 1 (0) / strings = 14 / storage = 97 B / avg = 6 B
+# current buf: size = 8174 B / used = 97 B / count = 14 / avg = 6 B
 
-# strcache performance: lookups = 20 / hit rate = 40%
+# strcache performance: lookups = 22 / hit rate = 36%
 # hash-table stats:
-# Load=12/8192=0%, Rehash=0, Collisions=0/20=0%
-# Finished Make data base on Mon May 16 09:15:26 2022
+# Load=14/8192=0%, Rehash=0, Collisions=0/22=0%
+# Finished Make data base on Wed May 18 08:17:48 2022
 
  
