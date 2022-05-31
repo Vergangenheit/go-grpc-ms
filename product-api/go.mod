@@ -3,6 +3,8 @@ module github.com/Vergangenheit/go-grpc-ms/product-api
 go 1.16
 
 require (
+	github.com/Vergangenheit/go-grpc-ms v0.0.0-20220518072559-eb5720a14c37 // indirect
+	github.com/Vergangenheit/go-grpc-ms/currency v0.0.0-20220518072559-eb5720a14c37 // indirect
 	github.com/go-openapi/analysis v0.21.3 // indirect
 	github.com/go-openapi/errors v0.20.2
 	github.com/go-openapi/runtime v0.24.0
