@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/hashicorp/go-hclog"
+	hclog "github.com/hashicorp/go-hclog"
 )
 
 type ExchangeRates struct {
@@ -22,6 +22,20 @@ func NewRates(l hclog.Logger) (*ExchangeRates, error) {
 		return er, err
 	}
 	return er, nil
+}
+
+//
+func (e *ExchangeRates) GetRate(base string, dest string) (float64, error) {
+	br, ok := e.rate[base]
+	if !ok {
+		return 0, fmt.Errorf("Rate not found for currency %s", base)
+	}
+	dr, ok := e.rate[dest]
+	if !ok {
+		return 0, fmt.Errorf("Rate not found for currency %s", dest)
+	}
+
+	return dr / br, nil
 }
 
 func (e *ExchangeRates) getRates() error {
@@ -50,6 +64,7 @@ func (e *ExchangeRates) getRates() error {
 		}
 		e.rate[m.Currency] = rate
 	}
+	e.rate["EUR"] = 1
 	return nil
 }
 

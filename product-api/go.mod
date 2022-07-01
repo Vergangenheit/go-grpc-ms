@@ -3,8 +3,7 @@ module github.com/Vergangenheit/go-grpc-ms/product-api
 go 1.16
 
 require (
-	github.com/Vergangenheit/go-grpc-ms v0.0.0-20220518072559-eb5720a14c37 // indirect
-	github.com/Vergangenheit/go-grpc-ms/currency v0.0.0-20220518072559-eb5720a14c37 // indirect
+	github.com/Vergangenheit/go-grpc-ms/currency v0.0.0-20220518072559-eb5720a14c37
 	github.com/go-openapi/analysis v0.21.3 // indirect
 	github.com/go-openapi/errors v0.20.2
 	github.com/go-openapi/runtime v0.24.0
@@ -22,6 +21,7 @@ require (
 	github.com/rogpeppe/go-internal v1.8.0 // indirect
 	github.com/stretchr/testify v1.7.0
 	go.mongodb.org/mongo-driver v1.9.0 // indirect
+	google.golang.org/grpc v1.46.0
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 )
